@@ -26,6 +26,7 @@ public class CamView extends JavaCameraView implements PictureCallback {
         // The camera preview was automatically stopped. Start it again.
         mCamera.startPreview();
         mCamera.setPreviewCallback(this);
+//        mCamera.setDisplayOrientation(90);
 
         // Write the image in a file (in jpeg format)
         try{
