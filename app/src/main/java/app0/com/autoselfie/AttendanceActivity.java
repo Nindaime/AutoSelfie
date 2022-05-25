@@ -18,9 +18,12 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Size;
 import org.opencv.face.EigenFaceRecognizer;
 import org.opencv.face.FisherFaceRecognizer;
 import org.opencv.face.FaceRecognizer;
@@ -149,6 +152,15 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
             Log.d(TAG, "checking on camera frame handler: ");
 
+//                    Point point = new Point(300,200);
+//        Mat rotationMatrix = Imgproc.getRotationMatrix2D(point, 30,1);
+//
+//        Size size = new Size(mRgba.cols(), mRgba.cols());
+//
+//        Imgproc.warpAffine(mRgba,mRgba, rotationMatrix, size);
+
+//            Core.rotate(mRgba, mRgba,Core.ROTATE_90_CLOCKWISE);
+
             Rect[] facesArray = opencvUtility.getRectsForDetectedFaces(mGray);
 
             if (facesArray.length == 1 && !isPerformingRecognition) {
@@ -169,76 +181,84 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
     }
 
     private void performRecognition(Mat mRgba, Mat mGray, Rect[] facesArray) {
-        isPerformingRecognition = true;
+        try {
+
+            isPerformingRecognition = true;
 
 
-        Log.d(TAG, "Number of faces detected " + facesArray.length);
+            Log.d(TAG, "Number of faces detected " + facesArray.length);
 
 //            shouldFrameBeCaptured = false;
-        Log.d(TAG, "getting mat");
+            Log.d(TAG, "getting mat");
 
-        Mat c = opencvUtility.getMatForFace(mRgba, new Mat(mGray, facesArray[0]), facesArray[0]);
+            Mat c = opencvUtility.getMatForFace(mRgba, new Mat(mGray, facesArray[0]), facesArray[0]);
 
-        ArrayList<UserModel> users = dbHelper.onGetUsersImages();
+            ArrayList<UserModel> users = dbHelper.onGetUsersImages();
 
-        Log.d(TAG, "Gotten users 2: " + users.size());
-        Log.d(TAG, "Gotten users 2 images for first user: " + users.get(0).getImages().size());
-
-
-        Log.d(TAG, "next");
-
-        ArrayList<Mat> trainingImageData = new ArrayList<>();
-        ArrayList<Integer> trainingImageLabel = new ArrayList<>();
-
-        Log.d(TAG, "Traning Data");
-        users.forEach(user -> {
-            user.getImages().forEach(image -> {
+            Log.d(TAG, "Gotten users 2: " + users.size());
+            Log.d(TAG, "Gotten users 2 images for first user: " + users.get(0).getImages().size());
 
 
-                File file = new File(image);
-                Mat imageMat = Imgcodecs.imread(file.toString());
+            Log.d(TAG, "next");
 
-                Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_BGR2GRAY);
-                trainingImageData.add(imageMat);
-                trainingImageLabel.add(user.getId());
+            ArrayList<Mat> trainingImageData = new ArrayList<>();
+            ArrayList<Integer> trainingImageLabel = new ArrayList<>();
 
-                Log.d(TAG, "image height: " + imageMat.height());
+            Log.d(TAG, "Traning Data");
+            users.forEach(user -> {
+                user.getImages().forEach(image -> {
+
+
+                    File file = new File(image);
+                    Mat imageMat = Imgcodecs.imread(file.toString());
+
+                    Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_BGR2GRAY);
+                    trainingImageData.add(imageMat);
+                    trainingImageLabel.add(user.getId());
+
+                    Log.d(TAG, "image height: " + imageMat.height());
+                });
             });
-        });
 //
 //
-        MatOfInt labelsMat = new MatOfInt();
-        labelsMat.fromList(trainingImageLabel);
+            MatOfInt labelsMat = new MatOfInt();
+            labelsMat.fromList(trainingImageLabel);
 
 
 //
 //            System.out.println("Starting training...");
-        Log.d(TAG, "Starting training");
-        if (recognizer != null) {
+            Log.d(TAG, "Starting training");
+            if (recognizer != null) {
 
-            Log.d(TAG, "start training rec");
-            recognizer.train(trainingImageData, labelsMat);
-            int[] outLabel = new int[1];
-            double[] outConf = new double[1];
+                Log.d(TAG, "start training rec");
+                recognizer.train(trainingImageData, labelsMat);
+                int[] outLabel = new int[1];
+                double[] outConf = new double[1];
 //                System.out.println("Starting Prediction...");
-            Log.d(TAG, "Starting prediction");
-            recognizer.predict(c, outLabel, outConf);
-            Log.d(TAG, "***Predicted label is " + outLabel[0] + ".***");
-            Log.d(TAG, "***Confidence value is " + outConf[0] + ".***");
+                Log.d(TAG, "Starting prediction");
+                recognizer.predict(c, outLabel, outConf);
+                Log.d(TAG, "***Predicted label is " + outLabel[0] + ".***");
+                Log.d(TAG, "***Confidence value is " + outConf[0] + ".***");
 
-            if (outConf[0] > acceptableConfidenceLevel) {
-                Log.d(TAG, "updating register");
-                dbHelper.onAddUserToAttendanceRegister((int) outLabel[0]);
+                if (outConf[0] > acceptableConfidenceLevel) {
+                    Log.d(TAG, "updating register");
+                    dbHelper.onAddUserToAttendanceRegister((int) outLabel[0]);
+                }
+
+            } else {
+
+                Log.d(TAG, "recognizer is null");
             }
 
-        } else {
 
-            Log.d(TAG, "recognizer is null");
+            c.release();
+            isPerformingRecognition = false;
+        }catch (Exception ex){
+
+            Log.e(TAG, "Error: "+ex.getMessage());
+            String amaobi = "";
+            ex.printStackTrace();
         }
-
-
-        c.release();
-        isPerformingRecognition = false;
     }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {

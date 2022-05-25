@@ -17,9 +17,13 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
@@ -187,6 +191,16 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
         //            Core.flip(inputFrame.rgba(), mRgba, -1);
 
 //            Core.flip(mRgba.t(), mRgbat, -1);
+
+//        Point point = new Point(300,200);
+//        Mat rotationMatrix = Imgproc.getRotationMatrix2D(point, 30,1);
+//
+//        Size size = new Size(mRgba.cols(), mRgba.cols());
+//
+//        Imgproc.warpAffine(mRgba,mRgba, rotationMatrix, size);
+
+
+//        Core.rotate(mRgba, mRgba,Core.ROTATE_90_CLOCKWISE);
 
 
         Rect[] facesArray = opencvUtility.getRectsForDetectedFaces(mGray);
