@@ -1,2 +1,20 @@
 include ':app'
-include ':openCVLibrary343'
+
+//def opencvsdk = './OpenCV-android-sdk'
+//def opencvsdk = '/home/amaobi/Documents/Projects/AutoSelfie/OpenCV-android-sdk'
+//project(':opencv').projectDir = new File(opencvsdk + '/sdk')
+//
+////include ':app'
+////include ':openCVLibrary343'
+//
+//include ':openCVLibrary340dev'
+//include ':openCVLibrary340dev'
+//include ':openCVLibrary340'
+//include ':openCVLibrary340dev'
+//include ':opencv'
+//include ':openCVLibrary340dev'
+//include ':openCVLibrary340dev'
+//include ':openCVLibrary340dev'
+//include ':openCVLibrary3410'
+//include ':openCVLibrary3410'
+//include ':openCVLibrary3410'

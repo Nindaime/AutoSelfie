@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -94,6 +94,8 @@ public class AutoSelfie extends AppCompatActivity implements CvCameraViewListene
             }
         }
 
+
+
         MatOfRect closedHands = new MatOfRect();
         if(cascadeClassifier != null)
             cascadeClassifier.detectMultiScale(mGray, closedHands, 1.1,
@@ -163,9 +165,9 @@ public class AutoSelfie extends AppCompatActivity implements CvCameraViewListene
                     Log.i(TAG, "OpenCV loaded successfully");
                     try{
                         //load cascade file from application resources
-                        InputStream is = getResources().openRawResource(R.raw.palm);
+                        InputStream is = getResources().openRawResource(R.raw.frontalface);
                         File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-                        cascadeFile = new File(cascadeDir, "palm.xml");
+                        cascadeFile = new File(cascadeDir, "frontalface.xml");
                         FileOutputStream os = new FileOutputStream(cascadeFile);
 
                         byte[] buffer = new byte[4096];

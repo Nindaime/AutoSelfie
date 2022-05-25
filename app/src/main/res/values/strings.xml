@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">AutoSelfie</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_full_name">Enter Full Name</string>
+    <string name="textview">TextView</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="first_name">First Name</string>
+    <string name="enter_last_name">Enter Last Name</string>
+    <string name="go_to_attendance_view">Go to Attendance View</string>
 </resources>
