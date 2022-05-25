@@ -13,7 +13,9 @@
         android:layout_height="48dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="72dp"
-        android:autofillHints=""
+        android:autofillHints="#0A3159"
+        android:textColorHint="@color/colorPrimary"
+
         android:ems="10"
         android:hint="@string/enter_email"
         android:inputType="textEmailAddress"
@@ -29,6 +31,8 @@
         android:hint="@string/first_name"
         android:ems="10"
         android:text=""
+        android:textColorHint="@color/colorPrimary"
+        android:textColor="#0A3159"
         app:layout_constraintTop_toBottomOf="@+id/email"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -40,6 +44,8 @@
         android:layout_marginTop="12dp"
         android:hint="@string/enter_last_name"
         android:text=""
+        android:textColor="#0A3159"
+        android:textColorHint="@color/colorPrimary"
         android:ems="10"
         app:layout_constraintTop_toBottomOf="@+id/firstName"
         tools:layout_editor_absoluteX="0dp" />
@@ -53,7 +59,8 @@
         android:ems="10"
         android:hint="@string/enter_password"
         android:inputType="textPassword"
-        android:textColorHint="#546E7A"
+        android:textColorHint="@color/colorPrimary"
+        android:textColor="#0A3159"
         app:layout_constraintTop_toBottomOf="@+id/lastName"
         tools:layout_editor_absoluteX="0dp"
         android:importantForAutofill="no" />
@@ -62,10 +69,12 @@
         android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/sign_up"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="124dp"
+        android:background="#0A3159"
         android:onClick="onSubmitHandler"
+        android:text="@string/sign_up"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />

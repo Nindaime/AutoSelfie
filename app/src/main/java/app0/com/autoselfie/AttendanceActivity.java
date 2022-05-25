@@ -68,7 +68,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
         mOpenCvCameraView = (CamView) findViewById(R.id.auto_selfie_activity_surface_view);
         mOpenCvCameraView.setCameraIndex(1);
-        mOpenCvCameraView.setMaxFrameSize(600, 600);
+        mOpenCvCameraView.setMaxFrameSize(2000, 2000);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
         new Handler().postDelayed(new Runnable() {
