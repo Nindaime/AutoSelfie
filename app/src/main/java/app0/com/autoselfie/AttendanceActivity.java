@@ -63,7 +63,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
         comment = findViewById(R.id.comment);
         dbHelper = new DbHelper(getApplicationContext());
-        Toast.makeText(getApplicationContext(), "Look into the Camera screen for about a minnute \n You will be Prompted when to stop.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Look into the Camera screen for about a minute \n You will be Prompted when to stop.", Toast.LENGTH_SHORT).show();
 
 
         mOpenCvCameraView = (CamView) findViewById(R.id.auto_selfie_activity_surface_view);

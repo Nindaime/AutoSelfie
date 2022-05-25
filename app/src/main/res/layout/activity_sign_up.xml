@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Sign Up"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#0A3159"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/email"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
+
 
     <EditText
         android:id="@+id/email"
