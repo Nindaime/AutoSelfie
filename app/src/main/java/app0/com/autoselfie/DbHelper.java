@@ -96,7 +96,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean onAddUserToAttendanceRegister(int id) {
 
-        Log.i(TAG, "adding user images");
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
@@ -107,6 +106,47 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i(TAG, "added user to attendance");
 
         return insert != -1;
+    }
+
+    public boolean setStudentStatusToOnline(int id) {
+
+        Log.i(TAG, "adding user images");
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(IS_ONLINE_COLUMN, true);
+
+        long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, ID_COLUMN + "=?", new String[]{String.valueOf(id)});
+        Log.i(TAG, "added user to attendance");
+
+        return insert != -1;
+    }
+
+
+    public boolean onGetUserStatus(int id) {
+        Log.i(TAG, "getting user by id: ");
+
+        boolean status = false;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+
+        Cursor cursor = sqLiteDatabase.query(true, STUDENT_TABLE, new String[]{
+                IS_ONLINE_COLUMN
+        }, ID_COLUMN + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            status = cursor.getInt(cursor.getColumnIndexOrThrow(IS_ONLINE_COLUMN)) == 1 ? true : false;
+
+        }
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        Log.i(TAG, "gotten user");
+
+        return status;
     }
 
 
@@ -212,12 +252,12 @@ public class DbHelper extends SQLiteOpenHelper {
         return attendanceList;
     }
 
-    public void deletePictureFromImageTable(int id){
+    public void deletePictureFromImageTable(int id) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         String query = "DELETE FROM " + STUDENT_IMG_TABLE + " WHERE " + ID_COLUMN + " = ?";
 
-        Cursor cursor =sqLiteDatabase.rawQuery(query, new String[]{String.valueOf(id)});
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{String.valueOf(id)});
 
 
     }

@@ -54,8 +54,6 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
     private int acceptableConfidenceLevel = 70;
 
 
-    private TextView comment;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,7 +148,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
             if (mRgba == null)
                 return;
 
-            Log.d(TAG, "checking on camera frame handler: ");
+//            Log.d(TAG, "checking on camera frame handler: ");
 
 //                    Point point = new Point(300,200);
 //        Mat rotationMatrix = Imgproc.getRotationMatrix2D(point, 30,1);
@@ -216,7 +214,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                     trainingImageData.add(imageMat);
                     trainingImageLabel.add(user.getId());
 
-                    Log.d(TAG, "image height: " + imageMat.height());
+//                    Log.d(TAG, "image height: " + imageMat.height());
                 });
             });
 //
@@ -240,9 +238,16 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                 Log.d(TAG, "***Predicted label is " + outLabel[0] + ".***");
                 Log.d(TAG, "***Confidence value is " + outConf[0] + ".***");
 
-                if (outConf[0] > acceptableConfidenceLevel) {
+                if (outConf[0] < acceptableConfidenceLevel) {
+                    int studentId = (int) outLabel[0];
                     Log.d(TAG, "updating register");
-                    dbHelper.onAddUserToAttendanceRegister((int) outLabel[0]);
+                    Log.d(TAG, "this is the length of the label"+ outLabel.length);
+                    boolean userStatus = dbHelper.onGetUserStatus(studentId);
+
+                    if(!userStatus){
+                        dbHelper.onAddUserToAttendanceRegister(studentId);
+                        dbHelper.setStudentStatusToOnline(studentId);
+                    }
                 }
 
             } else {
