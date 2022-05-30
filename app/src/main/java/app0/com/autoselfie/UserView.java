@@ -3,6 +3,8 @@ package app0.com.autoselfie;
 //import android.app.Activity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -54,6 +56,8 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
     private DbHelper dbHelper;
     private boolean shouldFrameBeCaptured;
     private OpencvUtility opencvUtility;
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,8 +132,13 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
         new Handler().postDelayed(() -> {
             shouldFrameBeCaptured = false;
             Log.d(TAG, "Frame is not being captured.");
-            Toast.makeText(getApplicationContext(), "Your images have been captured successfully. \n You can exit the application.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Your images have been captured successfully.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         }, 35000);
+
+        sharedpreferences = getSharedPreferences(UtilitySharedPreference.MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedpreferences.edit();
 
     }
 
@@ -176,12 +185,32 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
 
+        Mat mRgbaT = new Mat();
+        Mat mGrayT = new Mat();
+        Mat mRgbaR = new Mat();
+        Mat mGrayR = new Mat();
+
+        Core.transpose(mRgba, mRgbaT);
+        Core.transpose(mGray, mGrayT);
+
+        Core.flip(mRgbaT, mRgbaR, -1);
+        Core.flip(mGrayT, mGrayR, -1);
+
+        Imgproc.resize(mRgbaR, mRgbaR, mRgba.size(), 0, 0, 0);
+        Imgproc.resize(mGrayR, mGrayR, mGray.size(), 0, 0, 0);
+
+//            resi.release();
+
+
+        mRgbaT.release();
+        mGrayT.release();
+
         if (shouldFrameBeCaptured) {
-            captureFrames(mRgba, mGray);
+            captureFrames(mRgbaR, mGrayR);
         }
 
 
-        return mRgba;
+        return mRgbaR;
     }
 
     private void captureFrames(Mat mRgba, Mat mGray) {
@@ -233,6 +262,9 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
                 if (bool) {
 
                     long imagedId = dbHelper.onAddUserImage(id, imagePath);
+                    UtilitySharedPreference.removeFromListOfIncompleteUserRegistration(editor,id);
+
+
 
 //                    runOnUiThread(new Runnable() {
 //                        @Override

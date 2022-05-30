@@ -1,6 +1,8 @@
 package app0.com.autoselfie;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,12 +11,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Set;
+
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText email, password,firstName, lastName;
+    private EditText email, password, firstName, lastName;
 
     private DbHelper dbHelper;
     private final String TAG = "SignUpActivity";
+
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,20 @@ public class SignUpActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
+
+        sharedpreferences = getSharedPreferences(UtilitySharedPreference.MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedpreferences.edit();
+
+        // get preference values and delete these from database
+
+        Set<String> items = sharedpreferences.getStringSet("key", null);
+
+//        items.forEach( id -> {
+//            dbHelper.deleteUserFromRegistration(Integer.parseInt(id));
+//        });
+//
+//        editor.clear();
+//        editor.commit();
 
     }
 
@@ -51,8 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-
-    public void onSubmitHandler(View view){
+    public void onSubmitHandler(View view) {
         Log.i(TAG, "Submit button triggered");
 
         String emailText = email.getText().toString();
@@ -63,9 +83,9 @@ public class SignUpActivity extends AppCompatActivity {
         try {
 
             handleIfFieldsAreEmpty(emailText, firstNameText, lastNameText, passwordText);
-            int userId = dbHelper.onAddUser(emailText,firstNameText, lastNameText, passwordText);
-            if(userId == -1){
-                throw new Exception("User account was not created");
+            int userId = dbHelper.onAddUser(emailText, firstNameText, lastNameText, passwordText);
+            if (userId == -1) {
+                throw new Exception("User account already exists");
             }
             Log.i(TAG, "User account created");
             Intent intent = new Intent(getApplicationContext(), UserView.class);
@@ -75,11 +95,9 @@ public class SignUpActivity extends AppCompatActivity {
             bundle.putString("email", emailText);
             bundle.putString("firstName", firstNameText);
             bundle.putString("lastName", lastNameText);
+            UtilitySharedPreference.insertIntoListOfIncompleteUserRegistration(editor, userId);
 
-//            bundle.putInt("id",1);
-//            bundle.putString("email", "aobikobe@gmail.com");
-//            bundle.putString("firstName", "amaobi");
-//            bundle.putString("lastName", "obikobe");
+
 
             intent.putExtras(bundle);
 

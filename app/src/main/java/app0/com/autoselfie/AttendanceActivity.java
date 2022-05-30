@@ -44,7 +44,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
     private static final String TAG = "Attendance";
     private File cascadeFile;
-    private Mat mRgba, mGray, mRgbaT;
+    private Mat mRgba, mGray;
     private CamView mOpenCvCameraView;
     private DbHelper dbHelper;
     private boolean shouldFrameBeCaptured = false;
@@ -59,7 +59,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
 
-        comment = findViewById(R.id.comment);
+
         dbHelper = new DbHelper(getApplicationContext());
         Toast.makeText(getApplicationContext(), "Look into the Camera screen for about a minute \n You will be Prompted when to stop.", Toast.LENGTH_SHORT).show();
 
@@ -98,6 +98,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
         mGray = new Mat();
         mRgba = new Mat();
 
+
     }
 
 
@@ -105,6 +106,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
         Log.d(TAG, "Stopped Camera View");
         mGray.release();
         mRgba.release();
+
 
     }
 
@@ -114,30 +116,66 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
+        try {
 
-        if (mGray != null) {
-            mGray.release();
-        }
+            if (mGray != null) {
+                mGray.release();
+            }
 
-        if (mRgba != null) {
-            mRgba.release();
-        }
+            if (mRgba != null) {
+                mRgba.release();
+            }
 
-        if (mRgbaT != null) {
+
+
+            mRgba = inputFrame.rgba();
+            mGray = inputFrame.gray();
+
+            Mat mRgbaT = new Mat();
+            Mat mGrayT = new Mat();
+            Mat mRgbaR = new Mat();
+            Mat mGrayR = new Mat();
+
+
+
+
+            Core.transpose(mRgba, mRgbaT);
+            Core.transpose(mGray, mGrayT);
+
+            Core.flip(mRgbaT, mRgbaR, -1);
+            Core.flip(mGrayT, mGrayR, -1);
+
+            Imgproc.resize(mRgbaR, mRgbaR, mRgba.size(), 0, 0, 0);
+            Imgproc.resize(mGrayR, mGrayR, mGray.size(), 0, 0, 0);
+
+//            resi.release();
+
+
             mRgbaT.release();
+            mGrayT.release();
+//            resi.release();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (shouldFrameBeCaptured) {
+                        captureFrames(mRgbaR, mGrayR);
+
+
+                    }
+                }
+            }).start();
+
+
+
+
+            return mRgbaR;
+        } catch (Exception ex) {
+
+            Log.d(TAG, ex.getMessage());
         }
 
-
-        mRgba = inputFrame.rgba();
-        mGray = inputFrame.gray();
-
-        if (shouldFrameBeCaptured) {
-            captureFrames(mRgba, mGray);
-
-        }
-
-
-        return mRgba;
+        return null;
     }
 
 
@@ -169,7 +207,6 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
 
         } catch (Exception ex) {
-
 
 
             Log.e(TAG, ex.getMessage());
@@ -238,17 +275,17 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                 Log.d(TAG, "***Predicted label is " + outLabel[0] + ".***");
                 Log.d(TAG, "***Confidence value is " + outConf[0] + ".***");
 
-                if (outConf[0] < acceptableConfidenceLevel) {
+//                if (outConf[0] < acceptableConfidenceLevel) {
                     int studentId = (int) outLabel[0];
                     Log.d(TAG, "updating register");
-                    Log.d(TAG, "this is the length of the label"+ outLabel.length);
+                    Log.d(TAG, "this is the length of the label" + outLabel.length);
                     boolean userStatus = dbHelper.onGetUserStatus(studentId);
 
-                    if(!userStatus){
+                    if (!userStatus) {
                         dbHelper.onAddUserToAttendanceRegister(studentId);
                         dbHelper.setStudentStatusToOnline(studentId);
                     }
-                }
+//                }
 
             } else {
 
@@ -258,10 +295,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
             c.release();
             isPerformingRecognition = false;
-        }catch (Exception ex){
-
-            Log.e(TAG, "Error: "+ex.getMessage());
-            String amaobi = "";
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

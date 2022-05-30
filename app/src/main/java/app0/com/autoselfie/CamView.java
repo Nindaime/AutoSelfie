@@ -12,7 +12,7 @@ import org.opencv.android.JavaCameraView;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class CamView extends JavaCameraView implements PictureCallback {
+public class CamView extends CustomJavaCameraView implements PictureCallback {
 
     private static final String TAG = "AutoSelfie::camView";
     private String mPictureFileName;

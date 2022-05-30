@@ -41,9 +41,19 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.i(TAG, "Creating Tables If tables do not exist");
 
-        String createStudentTable = "CREATE TABLE " + STUDENT_TABLE + " ( " + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + EMAIL_COLUMN + " TEXT ," + PASSWORD_COLUMN + " TEXT," + FIRST_NAME_COLUMN + " TEXT, " + LAST_NAME_COLUMN + " TEXT, " + IS_ONLINE_COLUMN + " BOOLEAN DEFAULT 0, UNIQUE (" + EMAIL_COLUMN + ") )";
-        String createStudentImageTable = "CREATE TABLE " + STUDENT_IMG_TABLE + " ( " + ID_COLUMN + " INTEGER , " + IMAGE_LOCATION_COLUMN + " TEXT, FOREIGN KEY (" + ID_COLUMN + ") REFERENCES " + STUDENT_TABLE + "(" + ID_COLUMN + ") )";
-        String createStudentAttendanceTable = "CREATE TABLE " + STUDENT_ATTENDANCE_TABLE + " ( " + ID_COLUMN + " INTEGER , " + TIME_COLUMN + " DATETIME DEFAULT CURRENT_TIMESTAMP , FOREIGN KEY (" + ID_COLUMN + ") REFERENCES " + STUDENT_TABLE + "(" + ID_COLUMN + ") )";
+        String createStudentTable = "CREATE TABLE " + STUDENT_TABLE + " ( " +
+                "" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + EMAIL_COLUMN + " TEXT ,"
+                + PASSWORD_COLUMN + " TEXT," + FIRST_NAME_COLUMN + " TEXT, " + LAST_NAME_COLUMN
+                + " TEXT, " + IS_ONLINE_COLUMN + " BOOLEAN DEFAULT 0, UNIQUE (" + EMAIL_COLUMN + ") )";
+        String createStudentImageTable = "CREATE TABLE " + STUDENT_IMG_TABLE
+                + " ( " + ID_COLUMN + " INTEGER , " + IMAGE_LOCATION_COLUMN
+                + " TEXT, FOREIGN KEY (" + ID_COLUMN + ") REFERENCES " + STUDENT_TABLE
+                + "(" + ID_COLUMN + ") )";
+        String createStudentAttendanceTable = "CREATE TABLE " + STUDENT_ATTENDANCE_TABLE
+                + " ( " + ID_COLUMN + " INTEGER , " + TIME_COLUMN
+                + " DATETIME DEFAULT CURRENT_TIMESTAMP , " +
+                "FOREIGN KEY (" + ID_COLUMN + ") " +
+                "REFERENCES " + STUDENT_TABLE + "(" + ID_COLUMN + ") )";
 
         sqLiteDatabase.execSQL(createStudentTable);
         sqLiteDatabase.execSQL(createStudentImageTable);
@@ -256,6 +266,17 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         String query = "DELETE FROM " + STUDENT_IMG_TABLE + " WHERE " + ID_COLUMN + " = ?";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{String.valueOf(id)});
+
+
+    }
+
+
+    public void deleteUserFromRegistration(int id) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        String query = "DELETE FROM " + STUDENT_TABLE + " WHERE " + ID_COLUMN + " = ?";
 
         Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{String.valueOf(id)});
 
