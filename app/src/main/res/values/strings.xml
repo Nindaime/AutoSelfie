@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AutoSelfie</string>
+    <string name="app_name">Student Attendance App</string>
     <string name="enter_password">Enter Password</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_full_name">Enter Full Name</string>

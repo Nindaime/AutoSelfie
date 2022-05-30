@@ -37,19 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
         firstName = findViewById(R.id.firstName);
         lastName = findViewById(R.id.lastName);
 
-        sharedpreferences = getSharedPreferences(UtilitySharedPreference.MyPREFERENCES, Context.MODE_PRIVATE);
-        editor = sharedpreferences.edit();
 
-        // get preference values and delete these from database
-
-        Set<String> items = sharedpreferences.getStringSet("key", null);
-
-//        items.forEach( id -> {
-//            dbHelper.deleteUserFromRegistration(Integer.parseInt(id));
-//        });
-//
-//        editor.clear();
-//        editor.commit();
 
     }
 
@@ -95,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity {
             bundle.putString("email", emailText);
             bundle.putString("firstName", firstNameText);
             bundle.putString("lastName", lastNameText);
-            UtilitySharedPreference.insertIntoListOfIncompleteUserRegistration(editor, userId);
+
 
 
 

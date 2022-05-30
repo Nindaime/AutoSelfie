@@ -120,7 +120,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public boolean setStudentStatusToOnline(int id) {
 
-        Log.i(TAG, "adding user images");
+
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
@@ -128,7 +128,24 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(IS_ONLINE_COLUMN, true);
 
         long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, ID_COLUMN + "=?", new String[]{String.valueOf(id)});
-        Log.i(TAG, "added user to attendance");
+
+
+        return insert != -1;
+    }
+
+
+
+    public boolean resetStudentStatusToOffline() {
+
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(IS_ONLINE_COLUMN, false);
+
+        long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, null,null);
+
 
         return insert != -1;
     }

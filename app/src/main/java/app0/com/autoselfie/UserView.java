@@ -137,8 +137,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
             startActivity(intent);
         }, 35000);
 
-        sharedpreferences = getSharedPreferences(UtilitySharedPreference.MyPREFERENCES, Context.MODE_PRIVATE);
-        editor = sharedpreferences.edit();
 
     }
 
@@ -262,8 +260,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
                 if (bool) {
 
                     long imagedId = dbHelper.onAddUserImage(id, imagePath);
-                    UtilitySharedPreference.removeFromListOfIncompleteUserRegistration(editor,id);
-
 
 
 //                    runOnUiThread(new Runnable() {
