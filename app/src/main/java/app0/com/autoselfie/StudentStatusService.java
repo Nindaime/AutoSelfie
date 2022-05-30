@@ -33,8 +33,9 @@ public class StudentStatusService  extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
-        dbHelper = new DbHelper(StudentStatusService.context);
+
         //TODO: make your job here
+        dbHelper = new DbHelper(StudentStatusService.context);
         dbHelper.resetStudentStatusToOffline();
     }
 }

@@ -10,18 +10,18 @@
     <uses-feature android:name="android.hardware.camera.front.autofocus" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_app_image"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_app_image"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,16 +29,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
+        <activity
             android:name=".AttendanceViewActivity"
             android:exported="false" />
         <activity
             android:name=".AttendanceActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SignUpActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".AutoSelfie"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -48,7 +50,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".StudentStatusService" android:enabled="true"/>
+        <service
+            android:name=".StudentStatusService"
+            android:enabled="true" />
     </application>
 
 </manifest>

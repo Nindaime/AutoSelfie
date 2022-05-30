@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         /** Set Alarm for resetting students online status at 12 midnight everyday*/
         int alarmId = (int)Math.random();
-        Calendar calendar = Calendar.getInstance();
+//        Calendar calendar = Calendar.getInstance();
         setDailyAlarmOn(getApplicationContext(), /* calendar.getTimeInMillis() */ getMillisecondsTillNextMidnight(), Uri.parse(String.valueOf(alarmId)));
     }
 
@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         PendingIntent operation =
                 StudentStatusService.getReminderPendingIntent(context, reminderTask);
-
-        Toast.makeText(getApplicationContext(), "About to show a long text>>>", Toast.LENGTH_SHORT).show();
 
         manager.setRepeating(AlarmManager.RTC_WAKEUP, alarmTime, AlarmManager.INTERVAL_DAY, operation);
 
