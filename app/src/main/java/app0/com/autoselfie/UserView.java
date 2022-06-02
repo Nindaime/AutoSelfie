@@ -65,7 +65,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_view);
 
-        Toast.makeText(getApplicationContext(), "Look into the Camera screen for about a minute \n You will be Prompted when to stop.", Toast.LENGTH_SHORT).show();
 
         dbHelper = new DbHelper(getApplicationContext());
 

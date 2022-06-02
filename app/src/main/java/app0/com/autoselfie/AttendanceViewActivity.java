@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+
 import java.util.ArrayList;
 
 public class AttendanceViewActivity extends AppCompatActivity {
@@ -39,6 +42,13 @@ public class AttendanceViewActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(verticalLayout);
 
+        recyclerView.setAdapter( new AttendanceListAdapter(list));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ArrayList<AttendanceModel> list = dbHelper.getAttendanceList();
         recyclerView.setAdapter( new AttendanceListAdapter(list));
     }
 }
