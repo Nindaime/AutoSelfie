@@ -29,6 +29,15 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String IS_ONLINE_COLUMN = "isOnline";
     private static final String EMAIL_COLUMN = "email";
     private static final String PASSWORD_COLUMN = "password";
+    private static final String SCHEDULE_ID_COLUMN = "scheduleId";
+    private static final String COURSE_TABLE = "course";
+    private static final String COURSE_CODE_COLUMN = "courseCode";
+    private static final String COURSE_NAME_COLUMN = "courseName";
+    private static final String SCHEDULE_TABLE = "schedule";
+    private static final String SCHEDULE_DAY_COLUMN = "day";
+    private static final String SCHEDULE_START_TIME_COLUMN = "startTime";
+    private static final String SCHEDULE_END_TIME_COLUMN = "endTime";
+
     private static final String TAG = "DBHelper";
 
 
@@ -45,18 +54,38 @@ public class DbHelper extends SQLiteOpenHelper {
                 "" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + EMAIL_COLUMN + " TEXT ,"
                 + PASSWORD_COLUMN + " TEXT," + FIRST_NAME_COLUMN + " TEXT, " + LAST_NAME_COLUMN
                 + " TEXT, " + IS_ONLINE_COLUMN + " BOOLEAN DEFAULT 0, UNIQUE (" + EMAIL_COLUMN + ") )";
+
         String createStudentImageTable = "CREATE TABLE " + STUDENT_IMG_TABLE
                 + " ( " + ID_COLUMN + " INTEGER , " + IMAGE_LOCATION_COLUMN
                 + " TEXT, FOREIGN KEY (" + ID_COLUMN + ") REFERENCES " + STUDENT_TABLE
                 + "(" + ID_COLUMN + ") )";
+
+
+        String createCourseTable = "CREATE TABLE "+COURSE_TABLE+" ( " +
+                ""+COURSE_CODE_COLUMN+" TEXT PRIMARY KEY, "+COURSE_NAME_COLUMN+" TEXT)";
+
+        String createScheduleTable = "CREATE TABLE "+SCHEDULE_TABLE+" ( "
+                +ID_COLUMN+" INTEGER PRIMARY KEY AUTOINCREMENT,"
+                +SCHEDULE_DAY_COLUMN+" TEXT, "
+                +COURSE_CODE_COLUMN+" TEXT, "
+                +SCHEDULE_START_TIME_COLUMN+" DATETIME, "
+                +SCHEDULE_END_TIME_COLUMN+" DATETIME, "
+                +"FOREIGN KEY ("+COURSE_CODE_COLUMN+") "
+                +"REFERENCES "+COURSE_TABLE+" ("+COURSE_CODE_COLUMN+") ) ";
+
         String createStudentAttendanceTable = "CREATE TABLE " + STUDENT_ATTENDANCE_TABLE
-                + " ( " + ID_COLUMN + " INTEGER , " + TIME_COLUMN
-                + " DATETIME DEFAULT CURRENT_TIMESTAMP , " +
+                + " ( " + ID_COLUMN + " INTEGER , "
+                + TIME_COLUMN
+                + " DATETIME DEFAULT CURRENT_TIMESTAMP , "
+                +SCHEDULE_ID_COLUMN+" INTEGER," +
                 "FOREIGN KEY (" + ID_COLUMN + ") " +
-                "REFERENCES " + STUDENT_TABLE + "(" + ID_COLUMN + ") )";
+                "REFERENCES " + STUDENT_TABLE + "(" + ID_COLUMN + "), " +
+                "FOREIGN KEY ("+SCHEDULE_ID_COLUMN+") REFERENCES "+SCHEDULE_TABLE+" ("+ID_COLUMN+") )";
 
         sqLiteDatabase.execSQL(createStudentTable);
         sqLiteDatabase.execSQL(createStudentImageTable);
+        sqLiteDatabase.execSQL(createCourseTable);
+        sqLiteDatabase.execSQL(createScheduleTable);
         sqLiteDatabase.execSQL(createStudentAttendanceTable);
 
         Log.i(TAG, "Tables query ran successfully");
