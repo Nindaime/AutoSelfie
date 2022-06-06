@@ -16,8 +16,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import app0.com.autoselfie.Model.Course;
+import app0.com.autoselfie.Model.ScheduleEntry;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -138,6 +140,36 @@ public class DbHelper extends SQLiteOpenHelper {
             long insert = sqLiteDatabase.insert(COURSE_TABLE, null, cv);
 
         });
+
+    }
+
+    public void onAddSchedules(List<ScheduleEntry> schedules) {
+
+        Log.i(TAG, "Creating Schedule: ");
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+
+
+
+
+        schedules.forEach(scheduleEntry -> {
+                ContentValues cv = new ContentValues();
+                /**
+                 * TODO
+                 * Use transactions if possible
+                 * */
+                cv.put(SCHEDULE_DAY_COLUMN, scheduleEntry.getDay());
+                cv.put(COURSE_CODE_COLUMN, scheduleEntry.getCourseCode());
+                cv.put(SCHEDULE_START_TIME_COLUMN, scheduleEntry.getStartTime());
+                cv.put(SCHEDULE_END_TIME_COLUMN, scheduleEntry.getEndTime());
+
+
+                long insert = sqLiteDatabase.insert(SCHEDULE_TABLE, null, cv);
+
+            });
+
+
+
 
     }
 

@@ -63,8 +63,8 @@ public class Course {
 
     /**
      * Factory Method for creating courses on app initialization
-     * @param null
-     * @return List<Course>
+     * @param null None needed
+     * @return List<Course> The valid list of courses for this application.
      *
      * */
     public static List<Course> getCourses() {
