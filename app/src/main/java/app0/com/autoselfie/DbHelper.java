@@ -15,6 +15,9 @@ import androidx.annotation.RequiresApi;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import app0.com.autoselfie.Model.Course;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -68,8 +71,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 +ID_COLUMN+" INTEGER PRIMARY KEY AUTOINCREMENT,"
                 +SCHEDULE_DAY_COLUMN+" TEXT, "
                 +COURSE_CODE_COLUMN+" TEXT, "
-                +SCHEDULE_START_TIME_COLUMN+" DATETIME, "
-                +SCHEDULE_END_TIME_COLUMN+" DATETIME, "
+                +SCHEDULE_START_TIME_COLUMN+" TIME, "
+                +SCHEDULE_END_TIME_COLUMN+" TIME, "
                 +"FOREIGN KEY ("+COURSE_CODE_COLUMN+") "
                 +"REFERENCES "+COURSE_TABLE+" ("+COURSE_CODE_COLUMN+") ) ";
 
@@ -115,6 +118,27 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         return (int) insert;
+    }
+
+    public void onAddCourses(List<Course> courses) {
+
+        Log.i(TAG, "Creating courses: ");
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+
+        courses.forEach( course -> {
+            ContentValues cv = new ContentValues();
+            /**
+             * TODO
+             * Use transactions if possible
+             * */
+            cv.put(COURSE_NAME_COLUMN, course.getCourseName());
+            cv.put(COURSE_CODE_COLUMN, course.getCourseCode());
+
+            long insert = sqLiteDatabase.insert(COURSE_TABLE, null, cv);
+
+        });
+
     }
 
     public long onAddUserImage(int id, String userImage) {
