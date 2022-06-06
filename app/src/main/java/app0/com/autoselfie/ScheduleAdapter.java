@@ -27,6 +27,7 @@ public class ScheduleAdapter
     // List with String type
     private ArrayList<ScheduleEntry> list;
     private Context context;
+    private final String TAG = "ScheduleAdapter";
 
     // View Holder class which
     // extends RecyclerView.ViewHolder
@@ -88,7 +89,7 @@ public class ScheduleAdapter
                         parent,
                         false);
 
-       ;
+        Log.d(TAG, "View inflated");
 
         // return itemView
         return new MyView(itemView);
@@ -108,6 +109,7 @@ public class ScheduleAdapter
 
         ScheduleEntry entry = list.get(position);
 
+        Log.d(TAG, "Setting items");
         holder.day.setText(entry.getDay());
         holder.courseCode.setText(entry.getCourseCode());
         holder.time.setText(entry.getTime());
@@ -115,8 +117,9 @@ public class ScheduleAdapter
         holder.startClassButton.setOnClickListener(v ->{
             Intent intent = new Intent(context, AttendanceActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putInt("id", entry.getId());
+            bundle.putInt("scheduleEntryId", entry.getId());
             intent.putExtras(bundle);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
 
@@ -126,6 +129,7 @@ public class ScheduleAdapter
             Bundle bundle = new Bundle();
             bundle.putInt("scheduleEntryId", entry.getId());
             intent.putExtras(bundle);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
     }

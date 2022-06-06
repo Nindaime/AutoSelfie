@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
+    android:background="#0A3159"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_weight="50"
         android:orientation="vertical"
+        android:background="#0A3159"
 
         >
 
@@ -20,7 +21,7 @@
             android:layout_height="match_parent"
             android:layout_weight="50"
             android:onClick="onGoToSignupActivity"
-            android:layout_margin="20dp"
+            android:layout_margin="1dp"
             >
 
             <ImageView
@@ -52,34 +53,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="50"
-            android:onClick="onGoToAttendanceView"
-            android:layout_margin="20dp"
+            android:background="#0A3159"
+
             >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Camera View"
-                android:textSize="12sp"
-                android:textFontWeight="@integer/material_motion_duration_long_2"
-                android:textColor="#0A3159"
-                android:textAlignment="gravity"
-                android:layout_margin="5dp"
-                android:textStyle="bold"
-                >
-
-
-            </TextView>
-
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_action_camera"
-                android:layout_gravity="center"
-                >
-
-            </ImageView>
         </androidx.cardview.widget.CardView>
 
 
@@ -98,39 +74,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="50"
-            android:onClick="seeListOfAttendance"
-            android:layout_margin="20dp"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View Attendance List"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textFontWeight="@integer/material_motion_duration_long_2"
-                android:textColor="#0A3159"
-                android:gravity="center"
-                android:layout_margin="5dp"
-                >
 
-            </TextView>
-
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_action_list"
-                android:layout_gravity="center"
-                >
-
-            </ImageView>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="50"
+            android:layout_margin="1dp"
             android:onClick="onGoToScheduleArrangementActivity"
             >
 
@@ -138,7 +91,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View Attendance List (Main)"
+                android:text="View Attendance List"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:textFontWeight="@integer/material_motion_duration_long_2"

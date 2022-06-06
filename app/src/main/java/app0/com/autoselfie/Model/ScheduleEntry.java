@@ -61,7 +61,7 @@ public class ScheduleEntry {
     }
 
 
-    private static void setSchedule(List<Course> courses) {
+    private static void setSchedule(List<Course> courses) throws CloneNotSupportedException {
 
         schedule = new ArrayList<>();
 
@@ -73,25 +73,25 @@ public class ScheduleEntry {
 
 
         Course firstShift = courses.get(0).setStartTime("8:00 am").setEndTime("9:00 am");
-        Course secondShift = courses.get(0).setStartTime("3:00 pm").setEndTime("4:00 pm");
+        Course secondShift = ((Course) (firstShift.clone())).setStartTime("3:00 pm").setEndTime("4:00 pm");
         Course thirdShift = courses.get(1).setStartTime("10:00 am").setEndTime("11:00 am");
-        Course fourthShift = courses.get(1).setStartTime("4:00 pm").setEndTime("5:00 pm");
+        Course fourthShift = ((Course) (thirdShift.clone())).setStartTime("4:00 pm").setEndTime("5:00 pm");
         Course fifthShift = courses.get(2).setStartTime("8:00 am").setEndTime("9:00 am");
-        Course sixthShift = courses.get(2).setStartTime("3:00 pm").setEndTime("4:00 pm");
+        Course sixthShift = ((Course) (fifthShift.clone())).setStartTime("3:00 pm").setEndTime("4:00 pm");
         Course seventhShift = courses.get(3).setStartTime("10:00 am").setEndTime("11:00 am");
-        Course eighthShift = courses.get(3).setStartTime("4:00 pm").setEndTime("5:00 pm");
+        Course eighthShift = ((Course) (seventhShift.clone())).setStartTime("4:00 pm").setEndTime("5:00 pm");
         Course ninthShift = courses.get(4).setStartTime("8:00 am").setEndTime("9:00 am");
-        Course tenthShift = courses.get(4).setStartTime("3:00 pm").setEndTime("4:00 pm");
+        Course tenthShift = ((Course) (ninthShift.clone())).setStartTime("3:00 pm").setEndTime("4:00 pm");
         Course eleventhShift = courses.get(5).setStartTime("10:00 am").setEndTime("11:00 am");
-        Course twelveShift = courses.get(5).setStartTime("4:00 pm").setEndTime("5:00 pm");
+        Course twelveShift = ((Course) (eleventhShift.clone())).setStartTime("4:00 pm").setEndTime("5:00 pm");
         Course thirteenthShift = courses.get(6).setStartTime("8:00 am").setEndTime("9:00 am");
-        Course fourteenthShift = courses.get(6).setStartTime("3:00 pm").setEndTime("4:00 pm");
+        Course fourteenthShift = ((Course) (thirteenthShift.clone())).setStartTime("3:00 pm").setEndTime("4:00 pm");
         Course fifteenthShift = courses.get(7).setStartTime("10:00 am").setEndTime("11:00 am");
-        Course sixteenthShift = courses.get(7).setStartTime("4:00 pm").setEndTime("5:00 pm");
+        Course sixteenthShift = ((Course) (fifteenthShift.clone())).setStartTime("4:00 pm").setEndTime("5:00 pm");
         Course seventeenthShift = courses.get(8).setStartTime("8:00 am").setEndTime("9:00 am");
-        Course eighteenthShift = courses.get(8).setStartTime("3:00 pm").setEndTime("4:00 pm");
+        Course eighteenthShift = ((Course) (seventeenthShift.clone())).setStartTime("3:00 pm").setEndTime("4:00 pm");
         Course nineteenthShift = courses.get(9).setStartTime("10:00 am").setEndTime("11:00 am");
-        Course twentiethShift = courses.get(9).setStartTime("4:00 pm").setEndTime("5:00 pm");
+        Course twentiethShift = ((Course) (nineteenthShift.clone())).setStartTime("4:00 pm").setEndTime("5:00 pm");
 
 
         schedule.add(new ScheduleEntry(MONDAY, firstShift.getCourseCode(), firstShift.getStartTime(), firstShift.getEndTime()));

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -31,8 +32,11 @@ public class AttendanceViewActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         scheduleEntryId = bundle.getInt("scheduleEntryId");
 
+        Toast.makeText(getApplicationContext(),"Schedule Entry: "+scheduleEntryId, Toast.LENGTH_SHORT).show();
+
         ArrayList<AttendanceModel> list = dbHelper.getAttendanceList(scheduleEntryId);
 
+        Toast.makeText(getApplicationContext(),"List Size: "+list.size(), Toast.LENGTH_SHORT).show();
 
 
         recyclerView
@@ -53,7 +57,6 @@ public class AttendanceViewActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        // TODO: Needs to pass it the scheduleEntryId
         ArrayList<AttendanceModel> list = dbHelper.getAttendanceList(scheduleEntryId);
         recyclerView.setAdapter( new AttendanceListAdapter(list));
     }

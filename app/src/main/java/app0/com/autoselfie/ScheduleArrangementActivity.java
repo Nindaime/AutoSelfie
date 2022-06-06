@@ -1,18 +1,16 @@
 package app0.com.autoselfie;
 
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.recyclerview.widget.LinearLayoutManager;
-        import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import android.os.Bundle;
-        import android.util.Log;
+import android.os.Bundle;
+import android.widget.Toast;
 
-        import org.opencv.android.LoaderCallbackInterface;
-        import org.opencv.android.OpenCVLoader;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
-        import app0.com.autoselfie.Model.ScheduleEntry;
+import app0.com.autoselfie.Model.ScheduleEntry;
 
 public class ScheduleArrangementActivity extends AppCompatActivity {
 
@@ -33,6 +31,7 @@ public class ScheduleArrangementActivity extends AppCompatActivity {
 
         ArrayList<ScheduleEntry> list = dbHelper.onGetSchedule();
 
+        Toast.makeText(getApplicationContext(), ""+list.size(), Toast.LENGTH_SHORT).show();
 
 
         recyclerView
@@ -47,13 +46,13 @@ public class ScheduleArrangementActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(verticalLayout);
 
-        recyclerView.setAdapter( new ScheduleAdapter(list, getApplicationContext()));
+        recyclerView.setAdapter(new ScheduleAdapter(list, getApplicationContext()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ArrayList<AttendanceModel> list = dbHelper.getAttendanceList(scheduleEntryId);
-        recyclerView.setAdapter( new AttendanceListAdapter(list));
+        ArrayList<ScheduleEntry> list = dbHelper.onGetSchedule();
+        recyclerView.setAdapter(new ScheduleAdapter(list, getApplicationContext()));
     }
 }

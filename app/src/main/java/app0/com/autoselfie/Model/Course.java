@@ -3,7 +3,7 @@ package app0.com.autoselfie.Model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course {
+public class Course implements Cloneable{
     private String courseName, courseCode;
     private String startTime, endTime;
 
@@ -44,6 +44,10 @@ public class Course {
         this.startTime = "N/A";
         this.endTime = "N/A";
 
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     private static void createCourses(){

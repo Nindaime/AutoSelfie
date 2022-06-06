@@ -101,9 +101,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
 
         adapter = new Adapter(imagesId, images, dbHelper);
 
-//        images.put(1, "/storage/emulated/0/Android/data/app0.com.autoselfie/files/sjgsgsjgsgjsjtsdgjdgkdkykgdkgyd1653468559.jpg");
-//        imagesId.add(1);
-
 
         // Set Horizontal Layout Manager
         // for Recycler view
@@ -196,7 +193,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
         Imgproc.resize(mRgbaR, mRgbaR, mRgba.size(), 0, 0, 0);
         Imgproc.resize(mGrayR, mGrayR, mGray.size(), 0, 0, 0);
 
-//            resi.release();
 
 
         mRgbaT.release();
@@ -213,20 +209,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
     private void captureFrames(Mat mRgba, Mat mGray) {
         Log.d(TAG, "checking on camera frame handler: ");
 
-        //Flip around the Y axis
-        //            Core.flip(inputFrame.rgba(), mRgba, -1);
-
-//            Core.flip(mRgba.t(), mRgbat, -1);
-
-//        Point point = new Point(300,200);
-//        Mat rotationMatrix = Imgproc.getRotationMatrix2D(point, 30,1);
-//
-//        Size size = new Size(mRgba.cols(), mRgba.cols());
-//
-//        Imgproc.warpAffine(mRgba,mRgba, rotationMatrix, size);
-
-
-//        Core.rotate(mRgba, mRgba,Core.ROTATE_90_CLOCKWISE);
 
 
         Rect[] facesArray = opencvUtility.getRectsForDetectedFaces(mGray);
@@ -248,10 +230,7 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
             String imagePath = file.toString();
 
             try {
-//                if (mRgba.height() > mRgba.width()) {
-//                    Log.i(TAG, "flip");
-//                    Core.flip(mRgba, mRgba, 1);
-//                }
+
                 bool = Imgcodecs.imwrite(imagePath, c);
                 c.release();
 
@@ -260,10 +239,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
 
                     long imagedId = dbHelper.onAddUserImage(id, imagePath);
 
-
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
 
                     images.put((int) imagedId, imagePath);
                     imagesId.add((int) imagedId);
@@ -278,11 +253,6 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
 
                     imagesId = null;
                     imagesId = newImagesId;
-
-
-//                    Log.d(TAG, "image id: " + imagedId);
-//                        }
-//                    });
 
 
                     Log.i(TAG, "SUCCESS writing image to external storage " + imagePath);
