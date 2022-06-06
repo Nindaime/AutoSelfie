@@ -1,22 +1,24 @@
 package app0.com.autoselfie;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.recyclerview.widget.LinearLayoutManager;
+        import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.util.Log;
+        import android.os.Bundle;
+        import android.util.Log;
 
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
+        import org.opencv.android.LoaderCallbackInterface;
+        import org.opencv.android.OpenCVLoader;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
-public class AttendanceViewActivity extends AppCompatActivity {
+        import app0.com.autoselfie.Model.ScheduleEntry;
+
+public class ScheduleArrangementActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private DbHelper dbHelper;
-    private final String TAG = "AttendanceViewActivity";
+    private final String TAG = "ScheduleArrangementActivity";
     RecyclerView.LayoutManager recyclerViewLayoutManager;
     LinearLayoutManager verticalLayout;
     private int scheduleEntryId;
@@ -26,12 +28,10 @@ public class AttendanceViewActivity extends AppCompatActivity {
 
         dbHelper = new DbHelper(getApplicationContext());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendance_view);
+        setContentView(R.layout.activity_schedule_arrangement);
 
-        Bundle bundle = getIntent().getExtras();
-        scheduleEntryId = bundle.getInt("scheduleEntryId");
 
-        ArrayList<AttendanceModel> list = dbHelper.getAttendanceList(scheduleEntryId);
+        ArrayList<ScheduleEntry> list = dbHelper.onGetSchedule();
 
 
 
@@ -41,19 +41,18 @@ public class AttendanceViewActivity extends AppCompatActivity {
 
         verticalLayout
                 = new LinearLayoutManager(
-                AttendanceViewActivity.this,
+                ScheduleArrangementActivity.this,
                 LinearLayoutManager.VERTICAL,
                 false);
 
         recyclerView.setLayoutManager(verticalLayout);
 
-        recyclerView.setAdapter( new AttendanceListAdapter(list));
+        recyclerView.setAdapter( new ScheduleAdapter(list, getApplicationContext()));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // TODO: Needs to pass it the scheduleEntryId
         ArrayList<AttendanceModel> list = dbHelper.getAttendanceList(scheduleEntryId);
         recyclerView.setAdapter( new AttendanceListAdapter(list));
     }

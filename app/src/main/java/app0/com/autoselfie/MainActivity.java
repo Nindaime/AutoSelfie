@@ -16,6 +16,8 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,11 @@ public class MainActivity extends AppCompatActivity {
     public void onGoToSignupActivity(View view){
         Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
         startActivity(intent);
+    }
 
+    public void onGoToScheduleArrangementActivity(View view){
+        Intent intent = new Intent(getApplicationContext(), ScheduleArrangementActivity.class);
+        startActivity(intent);
     }
 
     public void setDailyAlarmOn(Context context, long alarmTime, Uri reminderTask) {

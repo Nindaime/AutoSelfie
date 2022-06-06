@@ -52,12 +52,16 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
     FaceRecognizer recognizer;
     OpencvUtility opencvUtility;
     private int acceptableConfidenceLevel = 70;
+    private int scheduleEntryId;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
+
+        Bundle bundle = getIntent().getExtras();
+        scheduleEntryId = bundle.getInt("scheduleEntryId");
 
 
         dbHelper = new DbHelper(getApplicationContext());
@@ -277,13 +281,16 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
 //                if (outConf[0] < acceptableConfidenceLevel) {
                     int studentId = (int) outLabel[0];
+                    double confidenceLevel = (double) outConf[0];
                     Log.d(TAG, "updating register");
                     Log.d(TAG, "this is the length of the label" + outLabel.length);
                     boolean userStatus = dbHelper.onGetUserStatus(studentId);
 
+                    // TODO if statement here will change
+                    // If student has not been inserted then add student
                     if (!userStatus) {
-                        dbHelper.onAddUserToAttendanceRegister(studentId);
-                        dbHelper.setStudentStatusToOnline(studentId);
+                        dbHelper.onAddUserToAttendanceRegister(studentId, scheduleEntryId, confidenceLevel);
+//                        dbHelper.setStudentStatusToOnline(studentId);
                     }
 //                }
 

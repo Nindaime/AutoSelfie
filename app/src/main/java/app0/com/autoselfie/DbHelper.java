@@ -34,6 +34,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String IS_ONLINE_COLUMN = "isOnline";
     private static final String EMAIL_COLUMN = "email";
     private static final String PASSWORD_COLUMN = "password";
+    private static final String CONFIDENCE_LEVEL_COLUMN = "confidenceLevel";
     private static final String SCHEDULE_ID_COLUMN = "scheduleId";
     private static final String COURSE_TABLE = "course";
     private static final String COURSE_CODE_COLUMN = "courseCode";
@@ -66,32 +67,44 @@ public class DbHelper extends SQLiteOpenHelper {
                 + "(" + ID_COLUMN + ") )";
 
 
-        String createCourseTable = "CREATE TABLE "+COURSE_TABLE+" ( " +
-                ""+COURSE_CODE_COLUMN+" TEXT PRIMARY KEY, "+COURSE_NAME_COLUMN+" TEXT)";
+        String createCourseTable = "CREATE TABLE " + COURSE_TABLE + " ( " +
+                "" + COURSE_CODE_COLUMN + " TEXT PRIMARY KEY, " + COURSE_NAME_COLUMN + " TEXT)";
 
-        String createScheduleTable = "CREATE TABLE "+SCHEDULE_TABLE+" ( "
-                +ID_COLUMN+" INTEGER PRIMARY KEY AUTOINCREMENT,"
-                +SCHEDULE_DAY_COLUMN+" TEXT, "
-                +COURSE_CODE_COLUMN+" TEXT, "
-                +SCHEDULE_START_TIME_COLUMN+" TIME, "
-                +SCHEDULE_END_TIME_COLUMN+" TIME, "
-                +"FOREIGN KEY ("+COURSE_CODE_COLUMN+") "
-                +"REFERENCES "+COURSE_TABLE+" ("+COURSE_CODE_COLUMN+") ) ";
+        String createScheduleTable = "CREATE TABLE " + SCHEDULE_TABLE + " ( "
+                + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + SCHEDULE_DAY_COLUMN + " TEXT, "
+                + COURSE_CODE_COLUMN + " TEXT, "
+                + SCHEDULE_START_TIME_COLUMN + " TIME, "
+                + SCHEDULE_END_TIME_COLUMN + " TIME, "
+                + "FOREIGN KEY (" + COURSE_CODE_COLUMN + ") "
+                + "REFERENCES " + COURSE_TABLE + " (" + COURSE_CODE_COLUMN + ") ) ";
 
         String createStudentAttendanceTable = "CREATE TABLE " + STUDENT_ATTENDANCE_TABLE
                 + " ( " + ID_COLUMN + " INTEGER , "
                 + TIME_COLUMN
                 + " DATETIME DEFAULT CURRENT_TIMESTAMP , "
-                +SCHEDULE_ID_COLUMN+" INTEGER," +
+                + SCHEDULE_ID_COLUMN + " INTEGER," +
                 "FOREIGN KEY (" + ID_COLUMN + ") " +
                 "REFERENCES " + STUDENT_TABLE + "(" + ID_COLUMN + "), " +
-                "FOREIGN KEY ("+SCHEDULE_ID_COLUMN+") REFERENCES "+SCHEDULE_TABLE+" ("+ID_COLUMN+") )";
+                "FOREIGN KEY (" + SCHEDULE_ID_COLUMN + ") REFERENCES " + SCHEDULE_TABLE + " (" + ID_COLUMN + ") )";
 
         sqLiteDatabase.execSQL(createStudentTable);
         sqLiteDatabase.execSQL(createStudentImageTable);
         sqLiteDatabase.execSQL(createCourseTable);
         sqLiteDatabase.execSQL(createScheduleTable);
         sqLiteDatabase.execSQL(createStudentAttendanceTable);
+
+
+        try {
+            List<Course> courses = Course.getCourses();
+            List<ScheduleEntry> scheduleEntries = ScheduleEntry.getSchedule(courses);
+
+            onAddCourses(courses);
+            onAddSchedules(scheduleEntries);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Log.i(TAG, "Tables query ran successfully");
     }
@@ -128,7 +141,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
 
-        courses.forEach( course -> {
+        courses.forEach(course -> {
             ContentValues cv = new ContentValues();
             /**
              * TODO
@@ -149,26 +162,21 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
 
-
-
-
         schedules.forEach(scheduleEntry -> {
-                ContentValues cv = new ContentValues();
-                /**
-                 * TODO
-                 * Use transactions if possible
-                 * */
-                cv.put(SCHEDULE_DAY_COLUMN, scheduleEntry.getDay());
-                cv.put(COURSE_CODE_COLUMN, scheduleEntry.getCourseCode());
-                cv.put(SCHEDULE_START_TIME_COLUMN, scheduleEntry.getStartTime());
-                cv.put(SCHEDULE_END_TIME_COLUMN, scheduleEntry.getEndTime());
+            ContentValues cv = new ContentValues();
+            /**
+             * TODO
+             * Use transactions if possible
+             * */
+            cv.put(SCHEDULE_DAY_COLUMN, scheduleEntry.getDay());
+            cv.put(COURSE_CODE_COLUMN, scheduleEntry.getCourseCode());
+            cv.put(SCHEDULE_START_TIME_COLUMN, scheduleEntry.getStartTime());
+            cv.put(SCHEDULE_END_TIME_COLUMN, scheduleEntry.getEndTime());
 
 
-                long insert = sqLiteDatabase.insert(SCHEDULE_TABLE, null, cv);
+            long insert = sqLiteDatabase.insert(SCHEDULE_TABLE, null, cv);
 
-            });
-
-
+        });
 
 
     }
@@ -189,13 +197,15 @@ public class DbHelper extends SQLiteOpenHelper {
         return insert;
     }
 
-    public boolean onAddUserToAttendanceRegister(int id) {
+    public boolean onAddUserToAttendanceRegister(int userId, int scheduleId, double confidenceLevel) {
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
 
-        cv.put(ID_COLUMN, id);
+        cv.put(ID_COLUMN, userId);
+        cv.put(SCHEDULE_ID_COLUMN, scheduleId);
+        cv.put(CONFIDENCE_LEVEL_COLUMN, confidenceLevel);
 
         long insert = sqLiteDatabase.insert(STUDENT_ATTENDANCE_TABLE, TIME_COLUMN, cv);
         Log.i(TAG, "added user to attendance");
@@ -219,7 +229,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-
     public boolean resetStudentStatusToOffline() {
 
 
@@ -229,7 +238,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         cv.put(IS_ONLINE_COLUMN, false);
 
-        long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, null,null);
+        long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, null, null);
 
 
         return insert != -1;
@@ -298,6 +307,42 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    public ArrayList<ScheduleEntry> onGetSchedule() {
+        Log.i(TAG, "getting schedule from database");
+
+        ArrayList<ScheduleEntry> output = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.query(true, SCHEDULE_TABLE, new String[]{
+                ID_COLUMN, SCHEDULE_DAY_COLUMN, COURSE_CODE_COLUMN, SCHEDULE_START_TIME_COLUMN, SCHEDULE_END_TIME_COLUMN
+        }, null, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(ID_COLUMN));
+                String day = cursor.getString(cursor.getColumnIndexOrThrow(SCHEDULE_DAY_COLUMN));
+                String courseCode = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_CODE_COLUMN));
+                String startTime = cursor.getString(cursor.getColumnIndexOrThrow(SCHEDULE_START_TIME_COLUMN));
+                String endTime = cursor.getString(cursor.getColumnIndexOrThrow(SCHEDULE_END_TIME_COLUMN));
+
+                ScheduleEntry entry = new ScheduleEntry(day, courseCode, startTime, endTime).setId(id);
+
+                output.add(entry);
+
+            } while (cursor.moveToNext());
+        }
+
+        if (!cursor.isClosed()) {
+            cursor.close();
+        }
+        Log.i(TAG, "gotten users");
+
+        return output;
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<UserModel> onGetUsersImages() {
         Log.i(TAG, "getting user images");
@@ -333,14 +378,21 @@ public class DbHelper extends SQLiteOpenHelper {
         return users;
     }
 
-    public ArrayList<AttendanceModel> getAttendanceList() {
+    public ArrayList<AttendanceModel> getAttendanceList(int scheduleId) {
 
         ArrayList<AttendanceModel> attendanceList = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
-        String query = "SELECT * FROM " + STUDENT_ATTENDANCE_TABLE + " INNER JOIN " + STUDENT_TABLE + " ON " + STUDENT_TABLE + "." + ID_COLUMN + " = " + STUDENT_ATTENDANCE_TABLE + "." + ID_COLUMN + " ORDER BY " + TIME_COLUMN + " DESC";
+        String query = "SELECT " + STUDENT_ATTENDANCE_TABLE + ".*, " + SCHEDULE_TABLE + "." + SCHEDULE_DAY_COLUMN
+                + " FROM " + STUDENT_ATTENDANCE_TABLE
+                + " INNER JOIN " + STUDENT_TABLE
+                + " ON " + STUDENT_TABLE + "." + ID_COLUMN + " = " + STUDENT_ATTENDANCE_TABLE + "." + ID_COLUMN
+                + " INNER JOIN " + SCHEDULE_TABLE
+                + " ON " + STUDENT_TABLE + "." + SCHEDULE_ID_COLUMN + " = " + SCHEDULE_TABLE + "." + ID_COLUMN
+                + " WHERE " + STUDENT_ATTENDANCE_TABLE + "." + SCHEDULE_ID_COLUMN + " = ?"
+                + " ORDER BY " + TIME_COLUMN + " DESC";
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{});
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{String.valueOf(scheduleId)});
         if (cursor.moveToFirst()) {
 
             do {

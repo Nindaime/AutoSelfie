@@ -131,7 +131,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="50"
+            android:onClick="onGoToScheduleArrangementActivity"
             >
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Attendance List (Main)"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textFontWeight="@integer/material_motion_duration_long_2"
+                android:textColor="#0A3159"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                >
+
+            </TextView>
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_action_list"
+                android:layout_gravity="center"
+                >
+
+            </ImageView>
 
         </androidx.cardview.widget.CardView>
 

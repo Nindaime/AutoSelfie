@@ -1,17 +1,22 @@
 package app0.com.autoselfie.Model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ScheduleEntry {
-    private String day, courseCode, startTime, endTime;
-    private List<Course> courses;
+    private final String day;
+    private final String courseCode;
+    private final String startTime;
+    private final String endTime;
+    public int id;
+
+
+
+
     private static List<ScheduleEntry> schedule;
 
     /**
-     * @param String day, String courseCode, String startTime, String endTime
+//     * @param  String day, String courseCode, String startTime, String endTime
      */
 
     public ScheduleEntry(String day, String courseCode, String startTime, String endTime) {
@@ -38,6 +43,21 @@ public class ScheduleEntry {
 
     public String getEndTime() {
         return endTime;
+    }
+
+    public String getTime() {
+
+        return String.format("%s - %s", startTime, endTime);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ScheduleEntry setId(int id) {
+        this.id = id;
+
+        return this;
     }
 
 
@@ -101,12 +121,12 @@ public class ScheduleEntry {
     /**
      * Factory Method For Creating Schedule on app initialization
      *
-     * @param List<Course> the list of courses that will be expected.
+//     * @param List<Course> the list of courses that will be expected.
      *                     For this app length should be 10. If least of intended
      *                     Courses is greater than 10. Please configure setSchedule appropriately
      * @return List<ScheduleEntry> returned days with courses attached to them
      */
-    public List<ScheduleEntry> getSchedule(List<Course> courses) throws Exception {
+    public static List<ScheduleEntry> getSchedule(List<Course> courses) throws Exception {
 
         if (courses.size() < 10)
             throw new Exception("List of Courses for this setup must be at least 10");
