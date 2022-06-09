@@ -45,7 +45,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
     private boolean isPerformingRecognition = false;
     FaceRecognizer recognizer;
     OpencvUtility opencvUtility;
-    private int acceptableConfidenceLevel = 70;
+    private int acceptableConfidenceLevel = 80;
     private int scheduleEntryId;
     private final Semaphore semaphore = new Semaphore(1);
     private int count = 1;
@@ -309,8 +309,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                     Log.d(TAG, "Failed");
                 }
 
-                        Toast.makeText(getApplicationContext(), "Student with id: "+studentId+" is in class today.", Toast.LENGTH_SHORT).show();
-//                        dbHelper.setStudentStatusToOnline(studentId);
+                      dbHelper.setStudentStatusToOnline(studentId);
 
               }
 

@@ -15,11 +15,11 @@ public class ScheduleEntry {
     private static final String ICE500LH = "ICE500LH";
     private static final String CHAPEL = "CHAPEL";
     private static final String LABORATORY = "LABORATORY";
-    private static final String MONDAY = "monday";
-    private static final String TUESDAY = "tuesday";
-    private static final String WEDNESDAY = "wednesday";
-    private static final String THURSDAY = "thursday";
-    private static final String FRIDAY = "friday";
+    private static final String MONDAY = "Monday";
+    private static final String TUESDAY = "Tuesday";
+    private static final String WEDNESDAY = "Wednesday";
+    private static final String THURSDAY = "Thursday";
+    private static final String FRIDAY = "Friday";
 
 
     private static List<ScheduleEntry> schedule;

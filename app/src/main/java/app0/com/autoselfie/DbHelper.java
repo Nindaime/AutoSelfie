@@ -36,6 +36,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String IMAGE_LOCATION_COLUMN = "imageLocation";
     private static final String TIME_COLUMN = "currentTime";
     private static final String DATE_COLUMN = "currentDate";
+    private static final String SCHEDULE_VENUE_COLUMN = "venue";
     private static final String IS_ONLINE_COLUMN = "isOnline";
     private static final String EMAIL_COLUMN = "email";
     private static final String PASSWORD_COLUMN = "password";
@@ -82,6 +83,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + COURSE_CODE_COLUMN + " TEXT, "
                 + SCHEDULE_START_TIME_COLUMN + " TIME, "
                 + SCHEDULE_END_TIME_COLUMN + " TIME, "
+                + SCHEDULE_VENUE_COLUMN + " TEXT, "
                 + "FOREIGN KEY (" + COURSE_CODE_COLUMN + ") "
                 + "REFERENCES " + COURSE_TABLE + " (" + COURSE_CODE_COLUMN + ") ) ";
 
@@ -190,6 +192,7 @@ public class DbHelper extends SQLiteOpenHelper {
             cv.put(COURSE_CODE_COLUMN, scheduleEntry.getCourseCode());
             cv.put(SCHEDULE_START_TIME_COLUMN, scheduleEntry.getStartTime());
             cv.put(SCHEDULE_END_TIME_COLUMN, scheduleEntry.getEndTime());
+            cv.put(SCHEDULE_VENUE_COLUMN, scheduleEntry.getVenue());
 
 
             long insert = sqLiteDatabase.insert(SCHEDULE_TABLE, null, cv);
@@ -350,7 +353,7 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         Cursor cursor = sqLiteDatabase.query(true, SCHEDULE_TABLE, new String[]{
-                ID_COLUMN, SCHEDULE_DAY_COLUMN, COURSE_CODE_COLUMN, SCHEDULE_START_TIME_COLUMN, SCHEDULE_END_TIME_COLUMN
+                ID_COLUMN, SCHEDULE_DAY_COLUMN, COURSE_CODE_COLUMN, SCHEDULE_START_TIME_COLUMN, SCHEDULE_END_TIME_COLUMN, SCHEDULE_VENUE_COLUMN
         }, null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -362,8 +365,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 String courseCode = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_CODE_COLUMN));
                 String startTime = cursor.getString(cursor.getColumnIndexOrThrow(SCHEDULE_START_TIME_COLUMN));
                 String endTime = cursor.getString(cursor.getColumnIndexOrThrow(SCHEDULE_END_TIME_COLUMN));
+                String venue = cursor.getString(cursor.getColumnIndexOrThrow(SCHEDULE_VENUE_COLUMN));
 
-                ScheduleEntry entry = new ScheduleEntry(day, courseCode, startTime, endTime).setId(id);
+                ScheduleEntry entry = new ScheduleEntry(day, courseCode, startTime, endTime,venue).setId(id);
 
                 output.add(entry);
 

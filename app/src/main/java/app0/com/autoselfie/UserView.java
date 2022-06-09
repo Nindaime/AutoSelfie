@@ -2,15 +2,18 @@ package app0.com.autoselfie;
 
 //import android.app.Activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,6 +67,13 @@ public class UserView extends AppCompatActivity implements CvCameraViewListener2
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_view);
+
+//        if (ContextCompat.checkSelfPermission(
+//                getApplicationContext(), Manifest.permission.REQ) ==
+//                PackageManager.PERMISSION_GRANTED) {
+//            requestPermissionLauncher.launch(
+//                    Manifest.permission.REQUESTED_PERMISSION);
+//        }
 
 
         dbHelper = new DbHelper(getApplicationContext());

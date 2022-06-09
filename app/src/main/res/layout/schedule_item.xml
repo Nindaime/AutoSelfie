@@ -18,7 +18,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/top"
+        >
 
         <TextView
             android:id="@+id/day"
@@ -29,31 +31,45 @@
             android:layout_marginBottom="4dp"
             android:layout_weight="2"
             android:text=""
+            android:textStyle="bold"
             android:textColor="#012"
             android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/secondFromTop"
+        >
+
 
         <TextView
             android:id="@+id/courseCode"
-            android:layout_gravity="end"
+
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="3dp"
             android:textSize="12sp"
+
             android:layout_width="match_parent"
-            android:text=""
+            android:text="dfdfddfdfd"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textColor="#012"/>
 
         <TextView
             android:id="@+id/time"
-            android:layout_gravity="end"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="3dp"
             android:textSize="12sp"
             android:layout_width="match_parent"
-            android:text=""
+            android:text="dfdfdd"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textColor="#012"/>
@@ -61,12 +77,13 @@
         <TextView
             android:id="@+id/venue"
             android:layout_gravity="end"
+            android:textAlignment="viewEnd"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="3dp"
             android:textSize="12sp"
             android:layout_width="match_parent"
-            android:text=""
+            android:text="ddfdfdfd"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textColor="#012"/>
@@ -76,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         >
 
         <Button

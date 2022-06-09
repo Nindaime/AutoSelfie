@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.LayoutInflater;
 
@@ -39,6 +40,7 @@ public class ScheduleAdapter
         TextView day,courseCode, time, venue;
 
         Button startClassButton, viewAttendanceButton;
+        LinearLayout top, secondFromTop;
 
         // parameterised constructor for View Holder class
         // which takes the view as a parameter
@@ -65,7 +67,8 @@ public class ScheduleAdapter
             viewAttendanceButton = (Button) view
                     .findViewById(R.id.viewAttendance);
 
-
+            top = (LinearLayout) view.findViewById(R.id.top);
+            secondFromTop = (LinearLayout) view.findViewById(R.id.secondFromTop);
 
         }
     }
@@ -113,11 +116,31 @@ public class ScheduleAdapter
 
         String day = entry.getDay();
 
-        if(!daysAlreadyIncludedInTheView.contains(day)){
+//        int shownPositions [] = new int []{0,4,7, 11};
+
+        ArrayList<Integer> shownPositions = new ArrayList<>();
+        shownPositions.add(0);
+        shownPositions.add(4);
+        shownPositions.add(7);
+        shownPositions.add(11);
+
+//        if(shownPositions.contains(position)){
             holder.day.setText(entry.getDay());
 
-            daysAlreadyIncludedInTheView.add(day);
-        }
+//            daysAlreadyIncludedInTheView.add(day);
+//        }
+//        else{
+//            holder.top.setVisibility(View.INVISIBLE);
+
+
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT
+//            );
+//            params.setMargins(0, 0, 0, 0);
+//
+//            holder.secondFromTop.setLayoutParams(params);
+//        }
 
         holder.courseCode.setText(entry.getCourseCode());
         holder.time.setText(entry.getTime());
