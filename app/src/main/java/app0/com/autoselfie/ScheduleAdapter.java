@@ -28,6 +28,7 @@ public class ScheduleAdapter
     private ArrayList<ScheduleEntry> list;
     private Context context;
     private final String TAG = "ScheduleAdapter";
+    private final ArrayList<String> daysAlreadyIncludedInTheView = new ArrayList<>();
 
     // View Holder class which
     // extends RecyclerView.ViewHolder
@@ -35,7 +36,7 @@ public class ScheduleAdapter
             extends RecyclerView.ViewHolder {
 
         // Text View
-        TextView day,courseCode, time;
+        TextView day,courseCode, time, venue;
 
         Button startClassButton, viewAttendanceButton;
 
@@ -55,11 +56,16 @@ public class ScheduleAdapter
             time = (TextView)view
                     .findViewById(R.id.time);
 
+            venue = (TextView)view
+                    .findViewById(R.id.venue);
+
             startClassButton = (Button) view
                     .findViewById(R.id.startClass);
 
             viewAttendanceButton = (Button) view
                     .findViewById(R.id.viewAttendance);
+
+
 
         }
     }
@@ -81,7 +87,6 @@ public class ScheduleAdapter
                                      int viewType)
     {
 
-        // Inflate item.xml using LayoutInflator
         View itemView
                 = LayoutInflater
                 .from(parent.getContext())
@@ -89,9 +94,6 @@ public class ScheduleAdapter
                         parent,
                         false);
 
-        Log.d(TAG, "View inflated");
-
-        // return itemView
         return new MyView(itemView);
     }
 
@@ -109,10 +111,17 @@ public class ScheduleAdapter
 
         ScheduleEntry entry = list.get(position);
 
-        Log.d(TAG, "Setting items");
-        holder.day.setText(entry.getDay());
+        String day = entry.getDay();
+
+        if(!daysAlreadyIncludedInTheView.contains(day)){
+            holder.day.setText(entry.getDay());
+
+            daysAlreadyIncludedInTheView.add(day);
+        }
+
         holder.courseCode.setText(entry.getCourseCode());
         holder.time.setText(entry.getTime());
+        holder.venue.setText(entry.getVenue());
 
         holder.startClassButton.setOnClickListener(v ->{
             Intent intent = new Intent(context, AttendanceActivity.class);
@@ -128,6 +137,7 @@ public class ScheduleAdapter
             Intent intent = new Intent(context, AttendanceViewActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("scheduleEntryId", entry.getId());
+            bundle.putString("courseCode", entry.getCourseCode());
             intent.putExtras(bundle);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);

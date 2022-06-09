@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.android.LoaderCallbackInterface;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 
 public class AttendanceViewActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    private TextView header;
     private DbHelper dbHelper;
     private final String TAG = "AttendanceViewActivity";
     RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -31,6 +33,10 @@ public class AttendanceViewActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         scheduleEntryId = bundle.getInt("scheduleEntryId");
+        String courseCode = bundle.getString("courseCode");
+
+
+        header.setText("Students Attendance Info ("+courseCode+")");
 
         Toast.makeText(getApplicationContext(),"Schedule Entry: "+scheduleEntryId, Toast.LENGTH_SHORT).show();
 

@@ -57,6 +57,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:textColor="#012"/>
+
+        <TextView
+            android:id="@+id/venue"
+            android:layout_gravity="end"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="3dp"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:text=""
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="#012"/>
     </LinearLayout>
 
     <LinearLayout
