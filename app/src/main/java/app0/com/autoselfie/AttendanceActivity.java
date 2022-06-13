@@ -262,7 +262,7 @@ public class AttendanceActivity extends AppCompatActivity {
             Log.d(TAG, "on manager connected. Status: " + status);
             if (status == LoaderCallbackInterface
                     .SUCCESS) {
-                Toast.makeText(getApplicationContext(), "Open cv loaded", Toast.LENGTH_SHORT).show();
+
                 Log.i(TAG, "OpenCV loaded successfully");
                 CascadeClassifier cascadeClassifier;
                 try {

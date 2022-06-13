@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -30,8 +29,6 @@ public class ScheduleArrangementActivity extends AppCompatActivity {
 
 
         ArrayList<ScheduleEntry> list = dbHelper.onGetSchedule();
-
-        Toast.makeText(getApplicationContext(), ""+list.size(), Toast.LENGTH_SHORT).show();
 
 
         recyclerView

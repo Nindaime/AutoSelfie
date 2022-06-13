@@ -5,21 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.icu.util.LocaleData;
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
-
-import androidx.annotation.RequiresApi;
-
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import app0.com.autoselfie.Model.Course;
 import app0.com.autoselfie.Model.ScheduleEntry;
@@ -355,7 +346,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+
     public ArrayList<UserModel> onGetUsersImages() {
         Log.i(TAG, "getting user images");
 

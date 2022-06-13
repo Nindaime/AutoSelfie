@@ -10,10 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
@@ -32,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         int cameraResponsePermission = getApplicationContext().checkCallingOrSelfPermission(cameraPermission);
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (storageResponsePermission != PackageManager.PERMISSION_GRANTED || cameraResponsePermission != PackageManager.PERMISSION_GRANTED)) {
+        if (storageResponsePermission != PackageManager.PERMISSION_GRANTED || cameraResponsePermission != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(new String[]{
                     Manifest.permission.CAMERA,
@@ -52,18 +49,6 @@ public class MainActivity extends AppCompatActivity {
 //        setDailyAlarmOn(getApplicationContext(), /* calendar.getTimeInMillis() */ getMillisecondsTillNextMidnight(), Uri.parse(String.valueOf(alarmId)));
     }
 
-
-    public void onGoToAttendanceView(View view) {
-        Intent intent = new Intent(getApplicationContext(), AttendanceActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void seeListOfAttendance(View view) {
-        Intent intent = new Intent(getApplicationContext(), AttendanceViewActivity.class);
-        startActivity(intent);
-
-    }
 
     public void onGoToSignupActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
