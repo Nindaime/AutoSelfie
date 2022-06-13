@@ -1,6 +1,5 @@
 package app0.com.autoselfie;
 
-//import android.app.Activity;
 
 import android.content.Context;
 import android.os.Build;
@@ -34,7 +33,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 
-public class AttendanceActivity extends AppCompatActivity implements CvCameraViewListener2 {
+public class AttendanceActivity extends AppCompatActivity {
 
     private static final String TAG = "AttendanceActivity";
     private File cascadeFile;
@@ -47,13 +46,10 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
     OpencvUtility opencvUtility;
     private int acceptableConfidenceLevel = 80;
     private int scheduleEntryId;
+    private String courseCode;
     private final Semaphore semaphore = new Semaphore(1);
     private int count = 1;
     ArrayList<UserModel> users = new ArrayList<>();
-    ArrayList<Mat> trainingImageData = new ArrayList<>();
-    ArrayList<Integer> trainingImageLabel = new ArrayList<>();
-    MatOfInt labelsMat;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,17 +58,77 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
         Bundle bundle = getIntent().getExtras();
         scheduleEntryId = bundle.getInt("scheduleEntryId");
-
+        courseCode = bundle.getString("courseCode");
 
         dbHelper = new DbHelper(getApplicationContext());
         shouldFrameBeCaptured = false;
-        Toast.makeText(getApplicationContext(), "Look into the Camera screen for about a minute \n You will be Prompted when to stop.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Please look into the camera.", Toast.LENGTH_SHORT).show();
 
 
         mOpenCvCameraView = findViewById(R.id.auto_selfie_activity_surface_view);
         mOpenCvCameraView.setCameraIndex(1);
         mOpenCvCameraView.setMaxFrameSize(600, 600);
-        mOpenCvCameraView.setCvCameraViewListener(this);
+
+
+        mOpenCvCameraView.setCvCameraViewListener(new CvCameraViewListener2() {
+            @Override
+            public void onCameraViewStarted(int width, int height) {
+                Log.d(TAG, "Started Camera View");
+                mGray = new Mat();
+                mRgba = new Mat();
+            }
+
+            @Override
+            public void onCameraViewStopped() {
+                Log.d(TAG, "Stopped Camera View");
+                mGray.release();
+                mRgba.release();
+
+
+            }
+
+            @Override
+            public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+
+
+                if (mGray != null) {
+                    mGray.release();
+                }
+
+                if (mRgba != null) {
+                    mRgba.release();
+                }
+
+
+                mRgba = inputFrame.rgba();
+                mGray = inputFrame.gray();
+
+                Mat mRgbaT = new Mat();
+                Mat mGrayT = new Mat();
+                Mat mRgbaR = new Mat();
+                Mat mGrayR = new Mat();
+
+
+                Core.transpose(mRgba, mRgbaT);
+                Core.transpose(mGray, mGrayT);
+
+                Core.flip(mRgbaT, mRgbaR, -1);
+                Core.flip(mGrayT, mGrayR, -1);
+
+                Imgproc.resize(mRgbaR, mRgbaR, mRgba.size(), 0, 0, 0);
+                Imgproc.resize(mGrayR, mGrayR, mGray.size(), 0, 0, 0);
+
+                mRgbaT.release();
+                mGrayT.release();
+
+                new ThreadWithSemaphore(semaphore, mRgbaR, mGrayR).start();
+
+
+                return mRgbaR;
+
+
+            }
+        });
 
         new Handler().postDelayed(() -> {
             shouldFrameBeCaptured = true;
@@ -83,7 +139,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
 
         users = dbHelper.onGetUsersImages();
 
-        Log.d(TAG, "Number of users: "+users.size());
+        Log.d(TAG, "Number of users: " + users.size());
 
 
     }
@@ -98,90 +154,6 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, mLoaderCallback);
         }
     }
-
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-        Log.d(TAG, "Started Camera View");
-        mGray = new Mat();
-        mRgba = new Mat();
-
-
-    }
-
-
-    public void onCameraViewStopped() {
-        Log.d(TAG, "Stopped Camera View");
-        mGray.release();
-        mRgba.release();
-
-
-    }
-
-
-    //    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-
-
-        if (mGray != null) {
-            mGray.release();
-        }
-
-        if (mRgba != null) {
-            mRgba.release();
-        }
-
-
-        mRgba = inputFrame.rgba();
-        mGray = inputFrame.gray();
-
-        Mat mRgbaT = new Mat();
-        Mat mGrayT = new Mat();
-        Mat mRgbaR = new Mat();
-        Mat mGrayR = new Mat();
-
-
-        Core.transpose(mRgba, mRgbaT);
-        Core.transpose(mGray, mGrayT);
-
-        Core.flip(mRgbaT, mRgbaR, -1);
-        Core.flip(mGrayT, mGrayR, -1);
-
-        Imgproc.resize(mRgbaR, mRgbaR, mRgba.size(), 0, 0, 0);
-        Imgproc.resize(mGrayR, mGrayR, mGray.size(), 0, 0, 0);
-
-//            resi.release();
-
-
-        mRgbaT.release();
-        mGrayT.release();
-//            resi.release();
-
-//            new Thread(new Runnable() {
-////                @Override
-//                public void run() {
-//                    Log.d(TAG, "BE Here s: "+shouldFrameBeCaptured);
-//                    if (shouldFrameBeCaptured) {
-//                        shouldFrameBeCaptured = false;
-//
-//                        captureFrames(mRgbaR, mGrayR);
-//
-//                        shouldFrameBeCaptured = true;
-//
-//
-//                    }
-//                }
-//            }).start();
-
-        new ThreadWithSemaphore(semaphore, mRgbaR, mGrayR).start();
-
-
-        return mRgbaR;
-
-
-    }
-
 
     private void captureFrames(Mat mRgba, Mat mGray) {
 
@@ -217,37 +189,13 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
         try {
 
 
-            Log.d(TAG, "Number of faces detected " + facesArray.length);
-
-//            shouldFrameBeCaptured = false;
-            Log.d(TAG, "getting mat");
-
             Mat face = opencvUtility.getMatForFace(mRgba, new Mat(mGray, facesArray[0]), facesArray[0]);
 
-
-            Log.d(TAG, "Gotten users 2: " + users.size());
-            Log.d(TAG, "Gotten users 2 images for first user: " + users.get(0).getImages().size());
-
-
-            Log.d(TAG, "next");
-
-
-//
-//
-
-
             ArrayList<UserModel> users = dbHelper.onGetUsersImages();
-
-            Log.d(TAG, "Gotten users 2: " + users.size());
-            Log.d(TAG, "Gotten users 2 images for first user: " + users.get(0).getImages().size());
-
-
-            Log.d(TAG, "next");
-
             ArrayList<Mat> trainingImageData = new ArrayList<>();
             ArrayList<Integer> trainingImageLabel = new ArrayList<>();
 
-            Log.d(TAG, "Traning Data");
+            Log.d(TAG, "Training Data");
             users.forEach(user -> {
                 user.getImages().forEach(image -> {
 
@@ -259,59 +207,40 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                     trainingImageData.add(imageMat);
                     trainingImageLabel.add(user.getId());
 
-//                    Log.d(TAG, "image height: " + imageMat.height());
                 });
             });
-//
-//
+
             MatOfInt labelsMat = new MatOfInt();
             labelsMat.fromList(trainingImageLabel);
-
-
-
-
-
-
-
-
-
-
-
-//
-//            System.out.println("Starting training...");
             Log.d(TAG, "Starting training");
+
             if (recognizer != null) {
 
-                Log.d(TAG, "start training rec"+trainingImageData.size());
-                Log.d(TAG, "start training rec"+labelsMat.size());
-                Log.d(TAG, "height: "+face.height());
-                Log.d(TAG, "height: "+face.width());
                 recognizer.train(trainingImageData, labelsMat);
                 int[] outLabel = new int[1];
                 double[] outConf = new double[1];
-//                System.out.println("Starting Prediction...");
                 Log.d(TAG, "Starting prediction");
                 recognizer.predict(face, outLabel, outConf);
-                Log.d(TAG, "***Predicted label is " + outLabel[0] + ".***");
-                Log.d(TAG, "***Confidence value is " + outConf[0] + ".***");
 
                 int studentId = outLabel[0];
                 double confidenceLevel = (double) outConf[0];
                 if (confidenceLevel < acceptableConfidenceLevel) {
 
-                Log.d(TAG, "updating register");
-                Log.d(TAG, "this is the length of the label" + outLabel.length);
+                    Log.d(TAG, "updating register");
 
-                // If student has not been inserted then add student
-                if(dbHelper.onAddUserToAttendanceRegister(studentId, scheduleEntryId, confidenceLevel)){
-                    Log.d(TAG, "Success");
-                }else{
-                    Log.d(TAG, "Failed");
+                    if (dbHelper.onAddUserToAttendanceRegister(studentId, scheduleEntryId, confidenceLevel)) {
+                        Log.d(TAG, "Success");
+
+                        String nameOfStudent =  dbHelper.onGetStudentName(studentId);
+
+                        this.runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), String.format("Hi %s. Welcome to %s", nameOfStudent, courseCode ) , Toast.LENGTH_SHORT).show();
+
+                        });
+                    } else {
+                        Log.d(TAG, "Failed");
+                    }
                 }
-
-                      dbHelper.setStudentStatusToOnline(studentId);
-
-              }
 
             } else {
 
@@ -325,7 +254,6 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
             ex.printStackTrace();
         }
 
-//        isPerformingRecognition = false;
     }
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -339,30 +267,6 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                 CascadeClassifier cascadeClassifier;
                 try {
 
-                    Log.d(TAG, "Training Data");
-                    users.forEach(user -> {
-                        user.getImages().forEach(image -> {
-
-
-                            File file = new File(image);
-                            Mat imageMat = Imgcodecs.imread(file.toString());
-
-                            Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_BGR2GRAY);
-//                            Imgproc.cvtColor(imageMat, imageMat);
-                            trainingImageData.add(imageMat);
-                            trainingImageLabel.add(user.getId());
-
-                            imageMat.release();
-
-//                    Log.d(TAG, "image height: " + imageMat.height());
-                        });
-
-                        Toast.makeText(getApplicationContext(), "Trained Data", Toast.LENGTH_SHORT).show();
-                    });
-
-                    labelsMat = new MatOfInt();
-
-                    labelsMat.fromList(trainingImageLabel);
                     //load cascade file from application resources
                     InputStream is = getResources().openRawResource(R.raw.frontalface);
                     File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
@@ -378,8 +282,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
                     os.close();
 
                     recognizer = LBPHFaceRecognizer.create();
-//                    recognizer = EigenFaceRecognizer.create();
-//                    FisherFaceRecognizer r = FisherFaceRecognizer.create();
+
                     cascadeClassifier = new CascadeClassifier(cascadeFile.getAbsolutePath());
                     if (cascadeClassifier.empty()) {
                         Log.e(TAG, "Failed to load cascade classifier");
@@ -431,11 +334,7 @@ public class AttendanceActivity extends AppCompatActivity implements CvCameraVie
             }
 
             Thread.interrupted();
-
-//            this.suspend();
-
         }
     }
-
 
 }

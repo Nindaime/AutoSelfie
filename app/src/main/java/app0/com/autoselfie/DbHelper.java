@@ -239,63 +239,34 @@ public class DbHelper extends SQLiteOpenHelper {
         cv.put(DATE_COLUMN, dateFormatter.format(date));
         cv.put(CONFIDENCE_LEVEL_COLUMN, confidenceLevel);
 
-        // TODO this query should only occur if user has not been submitted for the same day
-
-//        long insert = sqLiteDatabase.insert(STUDENT_ATTENDANCE_TABLE, TIME_COLUMN, cv);
         long insert = sqLiteDatabase.insertWithOnConflict(STUDENT_ATTENDANCE_TABLE, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
-        Log.i(TAG, "added user to attendance: inserId "+insert);
+        Log.i(TAG, "added user to attendance: insertId "+insert);
         sqLiteDatabase.close();
 
         return insert != -1;
     }
 
-    public boolean setStudentStatusToOnline(int id) {
 
 
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        ContentValues cv = new ContentValues();
-
-        cv.put(IS_ONLINE_COLUMN, true);
-
-        long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, ID_COLUMN + "=?", new String[]{String.valueOf(id)});
-
-        sqLiteDatabase.close();
-        return insert != -1;
-    }
-
-
-    public boolean resetStudentStatusToOffline() {
-
-
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
-        ContentValues cv = new ContentValues();
-
-        cv.put(IS_ONLINE_COLUMN, false);
-
-        long insert = sqLiteDatabase.update(STUDENT_TABLE, cv, null, null);
-
-        sqLiteDatabase.close();
-        return insert != -1;
-    }
-
-
-    public boolean onGetUserStatus(int id) {
+    public String onGetStudentName(int id) {
         Log.i(TAG, "getting user by id: ");
 
-        boolean status = false;
+        String name = "";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
 
         Cursor cursor = sqLiteDatabase.query(true, STUDENT_TABLE, new String[]{
-                IS_ONLINE_COLUMN
+                 FIRST_NAME_COLUMN, LAST_NAME_COLUMN
         }, ID_COLUMN + "=?", new String[]{String.valueOf(id)}, null, null, null, null);
 
         if (cursor.moveToFirst()) {
 
-            status = cursor.getInt(cursor.getColumnIndexOrThrow(IS_ONLINE_COLUMN)) == 1 ? true : false;
 
+            String firstName = cursor.getString(cursor.getColumnIndexOrThrow(FIRST_NAME_COLUMN));
+            String lastName = cursor.getString(cursor.getColumnIndexOrThrow(LAST_NAME_COLUMN));
+
+            name = String.format( "%s %s", firstName, lastName);
         }
 
         if (!cursor.isClosed()) {
@@ -304,7 +275,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i(TAG, "gotten user");
         sqLiteDatabase.close();
 
-        return status;
+        return name;
     }
 
 

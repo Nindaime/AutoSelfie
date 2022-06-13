@@ -35,7 +35,7 @@ public class StudentStatusService  extends IntentService {
 
 
         //TODO: make your job here
-        dbHelper = new DbHelper(StudentStatusService.context);
-        dbHelper.resetStudentStatusToOffline();
+//        dbHelper = new DbHelper(StudentStatusService.context);
+
     }
 }

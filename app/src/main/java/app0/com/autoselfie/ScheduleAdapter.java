@@ -1,6 +1,7 @@
 package app0.com.autoselfie;
 
 //import android.support.v7.widget.RecyclerView;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,28 +38,27 @@ public class ScheduleAdapter
             extends RecyclerView.ViewHolder {
 
         // Text View
-        TextView day,courseCode, time, venue;
+        TextView day, courseCode, time, venue;
 
         Button startClassButton, viewAttendanceButton;
         LinearLayout top, secondFromTop;
 
         // parameterised constructor for View Holder class
         // which takes the view as a parameter
-        public MyView(View view)
-        {
+        public MyView(View view) {
             super(view);
 
 
-            day = (TextView)view
+            day = (TextView) view
                     .findViewById(R.id.day);
 
-            courseCode = (TextView)view
+            courseCode = (TextView) view
                     .findViewById(R.id.courseCode);
 
-            time = (TextView)view
+            time = (TextView) view
                     .findViewById(R.id.time);
 
-            venue = (TextView)view
+            venue = (TextView) view
                     .findViewById(R.id.venue);
 
             startClassButton = (Button) view
@@ -75,8 +75,7 @@ public class ScheduleAdapter
 
     // Constructor for adapter class
     // which takes a list of String type
-    public ScheduleAdapter(ArrayList<ScheduleEntry> list, Context context)
-    {
+    public ScheduleAdapter(ArrayList<ScheduleEntry> list, Context context) {
 
         this.list = list;
         this.context = context;
@@ -87,8 +86,7 @@ public class ScheduleAdapter
     // as an item for the RecyclerView.
     @Override
     public MyView onCreateViewHolder(ViewGroup parent,
-                                     int viewType)
-    {
+                                     int viewType) {
 
         View itemView
                 = LayoutInflater
@@ -106,8 +104,7 @@ public class ScheduleAdapter
     // particular items of the RecyclerView.
     @Override
     public void onBindViewHolder(final MyView holder,
-                                 final int position)
-    {
+                                 final int position) {
 
         // Set the text of each item of
         // Recycler view with the list items
@@ -116,46 +113,30 @@ public class ScheduleAdapter
 
         String day = entry.getDay();
 
-//        int shownPositions [] = new int []{0,4,7, 11};
-
         ArrayList<Integer> shownPositions = new ArrayList<>();
         shownPositions.add(0);
         shownPositions.add(4);
         shownPositions.add(7);
         shownPositions.add(11);
 
-//        if(shownPositions.contains(position)){
-            holder.day.setText(entry.getDay());
+        holder.day.setText(entry.getDay());
 
-//            daysAlreadyIncludedInTheView.add(day);
-//        }
-//        else{
-//            holder.top.setVisibility(View.INVISIBLE);
-
-
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.WRAP_CONTENT
-//            );
-//            params.setMargins(0, 0, 0, 0);
-//
-//            holder.secondFromTop.setLayoutParams(params);
-//        }
 
         holder.courseCode.setText(entry.getCourseCode());
         holder.time.setText(entry.getTime());
         holder.venue.setText(entry.getVenue());
 
-        holder.startClassButton.setOnClickListener(v ->{
+        holder.startClassButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, AttendanceActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("scheduleEntryId", entry.getId());
+            bundle.putString("courseCode", entry.getCourseCode());
             intent.putExtras(bundle);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
 
-        holder.viewAttendanceButton.setOnClickListener(v ->{
+        holder.viewAttendanceButton.setOnClickListener(v -> {
 
             Intent intent = new Intent(context, AttendanceViewActivity.class);
             Bundle bundle = new Bundle();
@@ -170,8 +151,7 @@ public class ScheduleAdapter
     // Override getItemCount which Returns
     // the length of the RecyclerView.
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
 
         return list.size();
     }

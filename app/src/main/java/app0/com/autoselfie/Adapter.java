@@ -94,8 +94,6 @@ public class Adapter
         File imgFile = new File(imageLocation);
 
 
-//        Log.d("Adapter ", "imageLocation "+imageLocation);
-//        Log.d("Adapter ", "file exists "+imgFile.exists());
 
 
         if (imgFile.exists()) {
